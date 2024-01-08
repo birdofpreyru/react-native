@@ -91,19 +91,6 @@ type State = {
   pendingScrollUpdateCount: number,
 };
 
-function findLastWhere<T>(
-  arr: $ReadOnlyArray<T>,
-  predicate: (element: T) => boolean,
-): T | null {
-  for (let i = arr.length - 1; i >= 0; i--) {
-    if (predicate(arr[i])) {
-      return arr[i];
-    }
-  }
-
-  return null;
-}
-
 function getScrollingThreshold(threshold: number, visibleLength: number) {
   return (threshold * visibleLength) / 2;
 }
@@ -986,7 +973,8 @@ class VirtualizedList extends StateSafePureComponent<Props, State> {
       const spacerKey = this._getSpacerKey(!horizontal);
 
       const renderRegions = this.state.renderMask.enumerateRegions();
-      const lastSpacer = findLastWhere(renderRegions, r => r.isSpacer);
+      const lastRegion = renderRegions[renderRegions.length - 1];
+      const lastSpacer = lastRegion?.isSpacer ? lastRegion : null;
 
       for (const section of renderRegions) {
         if (section.isSpacer) {
@@ -1211,6 +1199,7 @@ class VirtualizedList extends StateSafePureComponent<Props, State> {
   _nestedChildLists: ChildListCollection<VirtualizedList> =
     new ChildListCollection();
   _offsetFromParentVirtualizedList: number = 0;
+  _pendingViewabilityUpdate: boolean = false;
   _prevParentOffset: number = 0;
   _scrollMetrics: {
     dOffset: number,
@@ -1302,18 +1291,10 @@ class VirtualizedList extends StateSafePureComponent<Props, State> {
     });
 
     if (layoutHasChanged) {
-      // TODO: We have not yet received parent content length, meaning we do not
-      // yet have up to date offsets in RTL. This means layout queries done
-      // when scheduling a new batch may not yet be correct. This is corrected
-      // when we schedule again in response to `onContentSizeChange`.
-      const {horizontal, rtl} = this._orientation();
-      this._scheduleCellsToRenderUpdate({
-        allowImmediateExecution: !(horizontal && rtl),
-      });
+      this._scheduleCellsToRenderUpdate();
     }
 
     this._triggerRemeasureForChildListsInCell(cellKey);
-
     this._computeBlankness();
     this._updateViewableItems(this.props, this.state.cellsAroundViewport);
   };
@@ -1746,9 +1727,7 @@ class VirtualizedList extends StateSafePureComponent<Props, State> {
     }
   }
 
-  _scheduleCellsToRenderUpdate(opts?: {allowImmediateExecution?: boolean}) {
-    const allowImmediateExecution = opts?.allowImmediateExecution ?? true;
-
+  _scheduleCellsToRenderUpdate() {
     // Only trigger high-priority updates if we've actually rendered cells,
     // and with that size estimate, accurately compute how many cells we should render.
     // Otherwise, it would just render as many cells as it can (of zero dimension),
@@ -1757,9 +1736,9 @@ class VirtualizedList extends StateSafePureComponent<Props, State> {
     // If this is triggered in an `componentDidUpdate` followed by a hiPri cellToRenderUpdate
     // We shouldn't do another hipri cellToRenderUpdate
     if (
-      allowImmediateExecution &&
+      (this._listMetrics.getAverageCellLength() > 0 ||
+        this.props.getItemLayout != null) &&
       this._shouldRenderWithPriority() &&
-      (this._listMetrics.getAverageCellLength() || this.props.getItemLayout) &&
       !this._hiPriInProgress
     ) {
       this._hiPriInProgress = true;

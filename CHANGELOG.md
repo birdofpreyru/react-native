@@ -2,6 +2,26 @@
 
 This file contains all changelogs for latest releases, from 0.70.0 onward. Please check out the other `CHANGELOG-*.md` files for previous versions.
 
+## v0.72.5
+
+### Changed
+- Bump CLI to 11.3.7 ([6f02d55deb](https://github.com/facebook/react-native/commit/6f02d55debe818dcb1db753f2ca4cc0b804d0df5) by [@huntie](https://github.com/huntie))
+- Bump @react-native/codegen to 0.72.7 ([4da991407d](https://github.com/facebook/react-native/commit/4da991407da2791f22ded368ad04457b03be5ee3) by [@Titozzz](https://github.com/Titozzz))
+
+### Fixed
+#### Android specific
+
+- Fix building Android on Windows. ([054ab62be0](https://github.com/facebook/react-native/commit/054ab62be0db5d14f02f5aeb4c696f037ea68794) by [@alespergl](https://github.com/alespergl))
+- A bug fix for Android builds with new arch on Windows host. ([a323249e0a](https://github.com/facebook/react-native/commit/a323249e0a0f9c2fb75ee05d7da62a34f3c56be0) by [@birdofpreyru](https://github.com/birdofpreyru))
+- Fix null crash when using maintainVisibleContentPosition on Android ([1a1a79871b](https://github.com/facebook/react-native/commit/1a1a79871b2d040764537433b431bc3b416904e3) by [@janicduplessis](https://github.com/janicduplessis))
+
+#### iOS specific
+
+- XCode 15 fixes ([21763e85e3](https://github.com/facebook/react-native/commit/21763e85e39e17a19a1cf7a9026ef74517464749), [0dbd621c59](https://github.com/facebook/react-native/commit/0dbd621c598e3ba7a203ec41bb70ce395ad1d62c) & [8a5b2d6735](https://github.com/facebook/react-native/commit/8a5b2d673502037731ee6bc40fc64cdd22139011))
+- Fix timer background state when App is launched from background ([a4ea737ae1](https://github.com/facebook/react-native/commit/a4ea737ae1773e7fd49969ae20b962bdd7481b37) by [@zhongwuzw](https://github.com/zhongwuzw))
+- Guard `JSGlobalContextSetInspectable` behind a compile time check for Xcode 14.3+ ([3eeee11d7a](https://github.com/facebook/react-native/commit/3eeee11d7ac4075d0917233d3be4a9469f802d35) by [@Saadnajmi](https://github.com/Saadnajmi))
+- Re-enable direct debugging with JSC on iOS 16.4+ ([8b1bf058c4](https://github.com/facebook/react-native/commit/8b1bf058c4bcbf4e5ca45b0056217266a1ed870c) by [@huntie](https://github.com/huntie))
+
 ## v0.72.4
 
 ### Added
@@ -447,6 +467,27 @@ This file contains all changelogs for latest releases, from 0.70.0 onward. Pleas
 #### iOS specific
 
 - Enable Address and Undefined Behavior Sanitizers on RNTester ([65e61f3c88](https://github.com/facebook/react-native/commit/65e61f3c88388d4a2ed88bcc9a2cb5ba63fd8afa) by [@Saadnajmi](https://github.com/Saadnajmi))
+
+## v0.71.13
+
+### Added
+
+#### Android specific
+
+- For targeting SDK 34 - Added RECEIVER_EXPORTED/RECEIVER_NOT_EXPORTED flag support in DevSupportManagerBase ([177d97d8ea](https://github.com/facebook/react-native/commit/177d97d8ea962bdd4dad8fcf0efb04a307f25000) by [@apuruni](https://github.com/apuruni))
+
+#### iOS specific
+
+- Added support to inline the source map via RCTBundleURLProvider
+ ([f7219ec02d](https://github.com/facebook/react-native/commit/f7219ec02d71d2f0f6c71af4d5c3d4850a898fd8) by [@Saadnajmi](https://github.com/Saadnajmi))
+
+### Fixed
+
+- Fix: mount devtools overlay only if react devtools are connected ([b3c7a5d4cc](https://github.com/facebook/react-native/commit/b3c7a5d4cc12be0fd9ec561daca35edabb896201) by [@hoxyq](https://github.com/hoxyq))
+
+#### iOS specific
+
+- Fix onChangeText not firing when clearing the value of TextInput with multiline=true on iOS ([0c9c57a9f7](https://github.com/facebook/react-native/commit/0c9c57a9f73294414d92428c5d2472dc1e1e5e96) by [@kkoudev](https://github.com/kkoudev))
 
 ## v0.71.12
 
